@@ -1,0 +1,22 @@
+setting :
+1. View / Livewire / chats.blade.php
+        document.addEventListener("DOMContentLoaded", () => {
+
+            const socket = io('192.168.1.17:3030',//ini pakai ip address laptop
+             {
+                transports: ['websocket']
+            });
+
+2. Resource/js/Pages/Tiket/histories.vue
+     // pas dibuka
+            onMounted(() => {
+                $('.simpleDatatables').DataTable();
+
+                let socket = io('192.168.1.17:3030'); //ini pakai ip address laptop
+                socket.on('connection');
+            });
+3. Public/js/tesocket.js
+    const socket = io('192.168.1.17:3030', { transports: ['websocket'] }); //ini pakai ip address laptop
+
+RUN socket
+$ node socket_server/socket2/index.js
