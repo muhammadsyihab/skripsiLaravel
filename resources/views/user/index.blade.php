@@ -95,11 +95,11 @@
                             </div>
 
                             {{-- Export excel --}}
-                            <button type="button" class="btn btn-outline-green float-right" data-bs-toggle="modal"
+                            {{--  <button type="button" class="btn btn-outline-green float-right" data-bs-toggle="modal"
                                 data-bs-target="#exportExcel">
                                 <i data-feather="external-link"></i>
                                 &nbsp; Export Excel
-                            </button>
+                            </button>  --}}
                             <!-- Export Excel -->
                             <div class="modal fade" id="exportExcel" tabindex="-1" role="dialog"
                                 aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -144,11 +144,11 @@
                             </div>
 
                             {{-- import excel --}}
-                            <button type="button" class="btn btn-outline-green float-right" data-bs-toggle="modal"
+                            {{--  <button type="button" class="btn btn-outline-green float-right" data-bs-toggle="modal"
                                 data-bs-target="#importExcel">
                                 <i data-feather="external-link"></i>
                                 &nbsp; Import Excel
-                            </button>
+                            </button>  --}}
                             <!-- Import Excel -->
                             <div class="modal fade" id="importExcel" tabindex="-1" role="dialog"
                                 aria-labelledby="exampleModalLabel" aria-hidden="true">
