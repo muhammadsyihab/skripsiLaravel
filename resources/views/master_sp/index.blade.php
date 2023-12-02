@@ -25,11 +25,12 @@
                             @endif
                             <div class="small text-muted">
                                 <span class="fw-500 text-primary">{{ now()->translatedFormat('l') }}</span>
-                                &middot; {{ now()->translatedFormat('F j, Y') }} &middot; {{ now()->translatedFormat('g:i a') }}
+                                &middot; {{ now()->translatedFormat('F j, Y') }} &middot;
+                                {{ now()->translatedFormat('g:i a') }}
                             </div>
                         </div>
                         <div>
-                            
+
 
                             @if (\Route::current()->getName() == 'oli.index')
                                 <a class="btn btn-outline-success float-right" href="{{ route('oli.create') }}"
@@ -40,27 +41,26 @@
                                     <i data-feather="printer"></i> &nbsp; PDF
                                 </a>
                                 @ho
-                                <a href="{{ route('sparepart.oli.excel') }}" class="btn btn-outline-green float-right">
+                                    {{--  <a href="{{ route('sparepart.oli.excel') }}" class="btn btn-outline-green float-right">
                                     <i data-feather="external-link"></i>
                                     &nbsp; Export Excel
-                                </a>
+                                </a>  --}}
                                 @endho
                             @else
                                 <a class="btn btn-outline-success float-right" href="{{ route('sparepart.create') }}"
-                                role="button">
-                                <i data-feather="plus-circle"></i> &nbsp Tambah </a>
+                                    role="button">
+                                    <i data-feather="plus-circle"></i> &nbsp Tambah </a>
 
                                 <a href="{{ route('sparepart.pdf') }}" class="btn btn-outline-warning float-right"
                                     target="_blank">
                                     <i data-feather="printer"></i> &nbsp; PDF
                                 </a>
                                 @ho
-                                <a href="{{ route('sparepart.excel') }}" class="btn btn-outline-green float-right">
+                                    {{--  <a href="{{ route('sparepart.excel') }}" class="btn btn-outline-green float-right">
                                     <i data-feather="external-link"></i>
                                     &nbsp; Export Excel
-                                </a>
+                                </a>  --}}
                                 @endho
-                               
                             @endif
 
                         </div>
@@ -108,12 +108,12 @@
                                                     @csrf
                                                     @if (\Route::current()->getName() == 'oli.index')
                                                         <a class="btn btn-warning btn-sm" title="Edit"
-                                                        href="{{ route('oli.edit', $sp->id) }}">
+                                                            href="{{ route('oli.edit', $sp->id) }}">
                                                             <i data-feather="edit"></i>&nbsp; Edit
                                                         </a>
                                                     @else
                                                         <a class="btn btn-warning btn-sm" title="Edit"
-                                                        href="{{ route('sparepart.edit', $sp->id) }}">
+                                                            href="{{ route('sparepart.edit', $sp->id) }}">
                                                             <i data-feather="edit"></i>&nbsp; Edit
                                                         </a>
                                                     @endif

@@ -58,7 +58,8 @@
                             Daftar Barang Keluar {{ $pit }}
                             <div class="small text-muted">
                                 <span class="fw-500 text-primary">{{ now()->translatedFormat('l') }}</span>
-                                &middot; {{ now()->translatedFormat('F j, Y') }} &middot; {{ now()->translatedFormat('g:i a') }}
+                                &middot; {{ now()->translatedFormat('F j, Y') }} &middot;
+                                {{ now()->translatedFormat('g:i a') }}
                             </div>
                         </div>
                         <div>
@@ -123,11 +124,11 @@
 
                             {{-- Export excel --}}
                             @ho
-                            <button type="button" class="btn btn-outline-green float-right" data-bs-toggle="modal"
+                                {{--  <button type="button" class="btn btn-outline-green float-right" data-bs-toggle="modal"
                                 data-bs-target="#importExcel">
                                 <i data-feather="external-link"></i>
                                 &nbsp; Export Excel
-                            </button>
+                            </button>  --}}
                             @endho
                             <!-- Export Excel -->
                             <div class="modal fade" id="importExcel" tabindex="-1" role="dialog"

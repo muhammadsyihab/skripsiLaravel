@@ -37,7 +37,9 @@
                             Daftar Barang Masuk
                             <div class="small text-muted">
                                 <span class="fw-500 text-primary">Bulan</span>
-                                &middot; {{ now()->parse($date)->translatedFormat('F Y') ?? now()->translatedFormat('F Y') }} &middot;
+                                &middot;
+                                {{ now()->parse($date)->translatedFormat('F Y') ?? now()->translatedFormat('F Y') }}
+                                &middot;
                                 {{ now()->translatedFormat('g:i a') }}
                             </div>
                         </div>
@@ -45,7 +47,7 @@
                             <a class="btn btn-outline-green float-right" href="{{ route('brgmasuk.create') }}"
                                 role="button">
                                 <i data-feather="plus-circle"></i> &nbsp Tambah </a>
-                                
+
                             {{-- <!-- Print PDF --> --}}
                             <button type="button" class="btn btn-outline-warning float-right" data-bs-toggle="modal"
                                 data-bs-target="#exportPdf">
@@ -80,14 +82,14 @@
                                     </form>
                                 </div>
                             </div>
-                            
+
                             {{-- Export excel --}}
                             @ho
-                            <button type="button" class="btn btn-outline-green float-right" data-bs-toggle="modal"
+                                {{--  <button type="button" class="btn btn-outline-green float-right" data-bs-toggle="modal"
                                 data-bs-target="#importExcel">
                                 <i data-feather="external-link"></i>
                                 &nbsp; Export Excel
-                            </button>
+                            </button>  --}}
                             @endho
                             <!-- Export Excel -->
                             <div class="modal fade" id="importExcel" tabindex="-1" role="dialog"
@@ -158,8 +160,8 @@
                                             <td>@currency($brg->item_price)</td>
                                             <td>@currency($brg->amount)</td>
                                             <td>{{ $brg->vendor }}</td>
-                                            <td>{{ $brg->nomor_po ?? "-" }}</td>
-                                            <td>{{ $brg->penerima ?? "-" }}</td>
+                                            <td>{{ $brg->nomor_po ?? '-' }}</td>
+                                            <td>{{ $brg->penerima ?? '-' }}</td>
                                             @if ($brg->status === 0)
                                                 <td><span class="badge bg-success">Diterima</span></td>
                                             @else

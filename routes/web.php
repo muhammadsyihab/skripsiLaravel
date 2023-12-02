@@ -37,6 +37,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
     Route::post('import/user', [App\Http\Controllers\RegisterController::class, 'import'])->name('user.import');
     Route::post('pdf/user', [App\Http\Controllers\RegisterController::class, 'pdf'])->name('user.pdf');
     Route::post('excel/user', [App\Http\Controllers\RegisterController::class, 'excel'])->name('user.excel');
+<<<<<<< HEAD
     // Route::resource('user', App\Http\Controllers\RegisterController::class);
     Route::get('/user', [App\Http\Controllers\RegisterController::class, 'index'])->name('user.index');
     Route::get('/user/create', [App\Http\Controllers\RegisterController::class, 'create'])->name('user.create');
@@ -44,6 +45,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
     Route::get('/user/edit/{id}', [App\Http\Controllers\RegisterController::class, 'edit'])->name('user.edit');
     Route::put('/user/update/{id}', [App\Http\Controllers\RegisterController::class, 'update'])->name('user.update');
     Route::delete('/user/destroy/{id}', [App\Http\Controllers\RegisterController::class, 'destroy'])->name('user.destroy');
+=======
+>>>>>>> d347d76785dd717339c2912693b662e2cb468ae8
 
     // Lokasi
     Route::resource('lokasi', App\Http\Controllers\AdminMasterLokasiController::class);

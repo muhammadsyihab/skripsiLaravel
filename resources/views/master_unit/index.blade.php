@@ -20,22 +20,22 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                    <label for="">Cari Unit Berdasarkan Type</label>
-                                    <input type="text" class="form-control filter-input" placeholder="Cari Type..."
-                                        data-column="0">
+                                <label for="">Cari Unit Berdasarkan Type</label>
+                                <input type="text" class="form-control filter-input" placeholder="Cari Type..."
+                                    data-column="0">
+                            </div>
+                            @ho
+                                <div class="col-md-6 mb-3">
+                                    <label for="">Cari Unit Berdasarkan Lokasi</label>
+                                    <select data-column="6" class="form-control form-select filter-select">
+                                        <option value="">-- Pilih Lokasi --</option>
+                                        @foreach ($locations as $location)
+                                            <option value="{{ $location->nama_lokasi }}">{{ $location->nama_lokasi }}
+                                            </option>
+                                        @endforeach
+                                    </select>
                                 </div>
-                                @ho
-                                    <div class="col-md-6 mb-3">
-                                        <label for="">Cari Unit Berdasarkan Lokasi</label>
-                                        <select data-column="6" class="form-control form-select filter-select">
-                                            <option value="">-- Pilih Lokasi --</option>
-                                            @foreach ($locations as $location)
-                                                <option value="{{ $location->nama_lokasi }}">{{ $location->nama_lokasi }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                @endho
+                            @endho
                         </div>
                     </div>
                 </div>
@@ -45,7 +45,8 @@
                             Daftar Unit {{ $locationFilter->nama_lokasi ?? 'Semua PIT' }}
                             <div class="small text-muted">
                                 <span class="fw-500 text-primary">{{ now()->translatedFormat('l') }}</span>
-                                &middot; {{ now()->translatedFormat('F j, Y') }} &middot; {{ now()->translatedFormat('g:i a') }}
+                                &middot; {{ now()->translatedFormat('F j, Y') }} &middot;
+                                {{ now()->translatedFormat('g:i a') }}
                             </div>
                         </div>
                         <div>
@@ -98,11 +99,11 @@
                                 </div>
                             </div>
                             {{-- Export excel --}}
-                            <button type="button" class="btn btn-outline-green float-right" data-bs-toggle="modal"
+                            {{--  <button type="button" class="btn btn-outline-green float-right" data-bs-toggle="modal"
                                 data-bs-target="#importExcel">
                                 <i data-feather="external-link"></i>
                                 &nbsp; Export Excel
-                            </button>
+                            </button>  --}}
                             <!-- Export Excel -->
                             <div class="modal fade" id="importExcel" tabindex="-1" role="dialog"
                                 aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -142,11 +143,11 @@
                                 </div>
                             </div>
                             {{-- import excel --}}
-                            <button type="button" class="btn btn-outline-green float-right" data-bs-toggle="modal"
+                            {{--  <button type="button" class="btn btn-outline-green float-right" data-bs-toggle="modal"
                                 data-bs-target="#importExcel">
                                 <i data-feather="external-link"></i>
                                 &nbsp; Import Excel
-                            </button>
+                            </button>  --}}
                             <!-- Import Excel -->
                             <div class="modal fade" id="importExcel" tabindex="-1" role="dialog"
                                 aria-labelledby="exampleModalLabel" aria-hidden="true">
