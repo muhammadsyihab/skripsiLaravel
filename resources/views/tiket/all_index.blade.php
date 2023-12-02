@@ -27,7 +27,7 @@
                                     <label for="bulan">Bulan</label>
                                     <input type="month" name="bulan" id="bulan" class="form-control">
                                 </div>
-                                
+
                                 @ho
                                     <div class="col-md-6 mb-3">
                                         <label for="">Cari Unit Berdasarkan Lokasi</label>
@@ -54,7 +54,9 @@
                             @endplanner
                             <div class="small text-muted">
                                 <span class="fw-500 text-primary">Bulan</span>
-                                &middot; {{ now()->parse($date)->translatedFormat('F Y') ?? now()->translatedFormat('F Y') }} &middot;
+                                &middot;
+                                {{ now()->parse($date)->translatedFormat('F Y') ?? now()->translatedFormat('F Y') }}
+                                &middot;
                                 {{ now()->translatedFormat('g:i a') }}
                             </div>
                         </div>
@@ -109,11 +111,11 @@
                             </div>
 
                             {{-- Export excel --}}
-                            <button type="button" class="btn btn-outline-green float-right" data-bs-toggle="modal"
+                            {{--  <button type="button" class="btn btn-outline-green float-right" data-bs-toggle="modal"
                                 data-bs-target="#importExcel">
                                 <i data-feather="external-link"></i>
                                 &nbsp; Export Excel
-                            </button>
+                            </button>  --}}
                             <!-- Export Excel -->
                             <div class="modal fade" id="importExcel" tabindex="-1" role="dialog"
                                 aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -243,7 +245,8 @@
                                                 <div class="row">
                                                     <div class="d-flex justify-content-between">
                                                         @if ($t->status_ticket < '6')
-                                                            <a class="btn btn-danger btn-sm" href="{{ route('pengaduan.show', $t->id) }}">
+                                                            <a class="btn btn-danger btn-sm"
+                                                                href="{{ route('pengaduan.show', $t->id) }}">
                                                                 <i class="fas fa-eye"></i>&nbsp;Show
                                                             </a>&nbsp;
                                                             {{-- <a class="btn btn-info btn-sm"
@@ -255,7 +258,8 @@
                                                                         class="fas fa-pen"></i>&nbsp;Edit</a>&nbsp;
                                                             @endplanner
                                                         @else
-                                                            <a class="btn btn-danger btn-sm" href="{{ route('pengaduan.show', $t->id) }}">
+                                                            <a class="btn btn-danger btn-sm"
+                                                                href="{{ route('pengaduan.show', $t->id) }}">
                                                                 <i class="fas fa-eye"></i>&nbsp;Show
                                                             </a>&nbsp;
                                                             @planner
