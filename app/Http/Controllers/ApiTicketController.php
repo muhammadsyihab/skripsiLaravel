@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\SparepartBarangKeluar;
 use App\Http\Resources\TicketResource;
 use App\Http\Resources\HistoriesTicket;
+use App\Models\Notification;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Contracts\Validation\Validator;
 
@@ -25,7 +26,7 @@ class ApiTicketController extends Controller
     public function index()
     {
         $tickets = Tiket::with('units', 'users')->where('status_ticket', '<', 6)->orderBy('id', 'DESC')->get();
-        
+
         if (!empty($tickets)) {
             return response()->json([
                 'code' => 200,
@@ -48,7 +49,7 @@ class ApiTicketController extends Controller
         if (!empty($histories)) {
             return response()->json([
                 'code' => 200,
-                'id_ticket' => '#00'. $ticket->id,
+                'id_ticket' => '#00' . $ticket->id,
                 'judul' => $ticket->judul,
                 'datas' => HistoriesTicket::collection($histories),
             ]);
@@ -70,21 +71,21 @@ class ApiTicketController extends Controller
             // ->first();
 
             $jadwal = DB::table('tagline_operator')
-            ->select(
-                'tagline_operator.*',
-                'tb_jadwal.*',
-                'users.name',
-                'master_unit.no_lambung',
-                'master_unit.jenis',
-                'master_unit.id AS id_unit',
-            )
-            ->join('tb_jadwal', 'tagline_operator.jadwal_operator_id', '=','tb_jadwal.id')
-            ->join('users', 'tb_jadwal.users_id', 'users.id')
-            ->join('master_unit', 'tb_jadwal.master_unit_id', 'master_unit.id')
-            ->where('tb_jadwal.users_id', auth()->user()->id)
-            ->where('tagline_operator.jam_kerja_masuk', '<=', now()->format('Y-m-d H:i:s'))
-            ->where('tagline_operator.jam_kerja_keluar', '>=', now()->format('Y-m-d H:i:s'))
-            ->first();
+                ->select(
+                    'tagline_operator.*',
+                    'tb_jadwal.*',
+                    'users.name',
+                    'master_unit.no_lambung',
+                    'master_unit.jenis',
+                    'master_unit.id AS id_unit',
+                )
+                ->join('tb_jadwal', 'tagline_operator.jadwal_operator_id', '=', 'tb_jadwal.id')
+                ->join('users', 'tb_jadwal.users_id', 'users.id')
+                ->join('master_unit', 'tb_jadwal.master_unit_id', 'master_unit.id')
+                ->where('tb_jadwal.users_id', auth()->user()->id)
+                ->where('tagline_operator.jam_kerja_masuk', '<=', now()->format('Y-m-d H:i:s'))
+                ->where('tagline_operator.jam_kerja_keluar', '>=', now()->format('Y-m-d H:i:s'))
+                ->first();
 
             if (!$jadwal) {
                 return response()->json([
@@ -94,9 +95,9 @@ class ApiTicketController extends Controller
             }
 
             $countDailyOperator = DailyOperator::where('tb_jadwal_id', $jadwal->id)
-            ->where('users_id', auth()->user()->id)
-            ->get()
-            ->count();
+                ->where('users_id', auth()->user()->id)
+                ->get()
+                ->count();
 
             if ($countDailyOperator == 1) {
                 return response()->json([
@@ -139,13 +140,19 @@ class ApiTicketController extends Controller
             // membuat ticket status 10 menunggu acc planner
             $ticket = Tiket::create([
                 'master_unit_id' => $request->master_unit_id,
-                'users_id' => auth()->user()->id, 
-                'photo' => $photoSave, 
-                'judul' => $request->judul, 
-                'waktu_insiden' => now(), 
-                'nama_pembuat' => auth()->user()->id, 
-                'status_ticket' => 0, 
-                'latlong' => $request->latlong, 
+                'users_id' => auth()->user()->id,
+                'photo' => $photoSave,
+                'judul' => $request->judul,
+                'waktu_insiden' => now(),
+                'nama_pembuat' => auth()->user()->id,
+                'status_ticket' => 0,
+                'latlong' => $request->latlong,
+            ]);
+            Notification::create([
+                'users_id' => auth()->user()->id,
+                'judul' => $request->judul,
+                'isi' => $request->judul,
+                'priority' => '1',
             ]);
 
             if (!$ticket) {
@@ -162,7 +169,7 @@ class ApiTicketController extends Controller
                 'keterangan' => $request->judul,
                 'photo' => null,
             ]);
-    
+
             if (!$historyTicket) {
                 return response()->json([
                     'code' => 400,
@@ -201,14 +208,14 @@ class ApiTicketController extends Controller
                 'keterangan' => $request->keterangan,
                 'photo' => $photoSave,
             ]);
-    
+
             if (!$historyTicket) {
                 return response()->json([
                     'code' => 400,
                     'messages' => 'Gagal memasukan riwayat pengaduan'
                 ])->setStatusCode(400);
             }
-    
+
             return response()->json([
                 'code' => 200,
                 'messages' => 'success',
@@ -220,10 +227,10 @@ class ApiTicketController extends Controller
                 'messages' => 'Anda tidak diizinkan'
             ])->setStatusCode(401);
         }
-        
     }
 
-    public function postTindakanTicket(Request $request) {
+    public function postTindakanTicket(Request $request)
+    {
         if (auth()->user()->role == 3) {
             // status tiket menjadi acc logistik pembelian pribadi
             $ticket = Tiket::find($request->tb_tiketing_id);
@@ -246,7 +253,7 @@ class ApiTicketController extends Controller
             //     $image_64 = $request->photo; //your base64 encoded data
             //     $extension = explode('/', explode(':', substr($image_64, 0, strpos($image_64, ';')))[1])[1];   // .jpg .png .pdf
             //     $replace = substr($image_64, 0, strpos($image_64, ',')+1); 
-            
+
             //     // find substring fro replace here eg: data:image/png;base64,
             //     $image = str_replace($replace, '', $image_64); 
             //     $image = str_replace(' ', '+', $image); 
@@ -255,8 +262,8 @@ class ApiTicketController extends Controller
             // } else {
             //     $imageName = null;
             // }
-            
-      
+
+
 
             $historyTicket = RiwayatTiket::create([
                 'users_id' => auth()->user()->id,
@@ -264,14 +271,14 @@ class ApiTicketController extends Controller
                 'keterangan' => $request->keterangan,
                 'photo' => $photoSave,
             ]);
-    
+
             if (!$historyTicket) {
                 return response()->json([
                     'code' => 400,
                     'messages' => 'Gagal melakukan tindakan tiket'
                 ])->setStatusCode(400);
             }
-    
+
             return response()->json([
                 'code' => 200,
                 'messages' => 'success',
@@ -285,7 +292,8 @@ class ApiTicketController extends Controller
         }
     }
 
-    public function groundTest(Request $request) {
+    public function groundTest(Request $request)
+    {
         if (auth()->user()->role == 4) {
             $ticket = Tiket::find($request->tb_tiketing_id);
             if ($ticket->status_ticket <= 5) {
@@ -307,14 +315,14 @@ class ApiTicketController extends Controller
                 'keterangan' => $request->keterangan,
                 'photo' => $photoSave,
             ]);
-    
+
             if (!$historyTicket) {
                 return response()->json([
                     'code' => 400,
                     'messages' => 'failed insert to table tindakan tiket'
                 ])->setStatusCode(400);
             }
-    
+
             return response()->json([
                 'code' => 200,
                 'messages' => 'success',
@@ -327,6 +335,4 @@ class ApiTicketController extends Controller
             ])->setStatusCode(401);
         }
     }
-
-   
 }

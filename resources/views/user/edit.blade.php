@@ -27,7 +27,7 @@
                     <div class="card-body">
                         <form action="{{ route('user.update', $users->id) }}" method="post" enctype="multipart/form-data">
                             @csrf
-                            @method('PATCH')
+                            @method('PUT')
                             <div class="row mb-3">
                                 <label for="name"
                                     class="col-md-4 col-form-label text-md-end">{{ __('Nama') }}</label>
