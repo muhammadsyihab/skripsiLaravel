@@ -10,7 +10,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>
-        {{ env('APP_NAME') ?? $title }}
+        E-Tambang
     </title>
 
     <link href="{{ asset('admin/dist/css/styles.css') }}" rel="stylesheet" />

@@ -508,7 +508,7 @@
             onMounted(() => {
                 $('.simpleDatatables').DataTable();
 
-                let socket = io('192.168.1.17:3030');
+                let socket = io('https://live.etambang.my.id');
                 socket.on('connection');
             });
 

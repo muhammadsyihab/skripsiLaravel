@@ -30,6 +30,7 @@ class JadwalResource extends JsonResource
 
         if (auth()->user()->role == 4) {
             return [
+                'id_unit' => $this->id,
                 'no_lambung' => $this->no_lambung,
                 'shift' => $shift,
                 'nama_unit' => $this->jenis,

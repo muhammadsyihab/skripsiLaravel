@@ -1,4 +1,4 @@
-const socket = io('192.168.1.17:3030', { transports: ['websocket'] });
+const socket = io('https://live.etambang.my.id', { transports: ['websocket'] });
 
 socket.on("connect", () => {
     const namaRoom = 'Ticket - ' + pengaduanId;

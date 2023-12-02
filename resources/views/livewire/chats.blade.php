@@ -52,7 +52,7 @@
     <script>
         document.addEventListener("DOMContentLoaded", () => {
 
-            const socket = io('192.168.1.17:3030', {
+            const socket = io('https://live.etambang.my.id', {
                 transports: ['websocket']
             });
 

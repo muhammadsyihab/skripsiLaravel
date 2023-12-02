@@ -4,6 +4,7 @@
 // use Throwable;
 use App\Models\Unit;
 use App\Events\HistoryChat;
+use Illuminate\Support\Facades\Auth;
 use Ladumor\OneSignal\OneSignal;
 // use App\Events\serviceNotifications;
 use Illuminate\Support\Facades\Route;
@@ -31,26 +32,32 @@ Route::get('/', function () {
 Auth::routes();
 Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
 
-    
+
     // Users routes
-    Route::resource('user', App\Http\Controllers\RegisterController::class);
     Route::post('import/user', [App\Http\Controllers\RegisterController::class, 'import'])->name('user.import');
     Route::post('pdf/user', [App\Http\Controllers\RegisterController::class, 'pdf'])->name('user.pdf');
     Route::post('excel/user', [App\Http\Controllers\RegisterController::class, 'excel'])->name('user.excel');
-    
+    // Route::resource('user', App\Http\Controllers\RegisterController::class);
+    Route::get('/user', [App\Http\Controllers\RegisterController::class, 'index'])->name('user.index');
+    Route::get('/user/create', [App\Http\Controllers\RegisterController::class, 'create'])->name('user.create');
+    Route::post('/user/store', [App\Http\Controllers\RegisterController::class, 'store'])->name('user.store');
+    Route::get('/user/edit/{id}', [App\Http\Controllers\RegisterController::class, 'edit'])->name('user.edit');
+    Route::put('/user/update/{id}', [App\Http\Controllers\RegisterController::class, 'update'])->name('user.update');
+    Route::delete('/user/destroy/{id}', [App\Http\Controllers\RegisterController::class, 'destroy'])->name('user.destroy');
+
     // Lokasi
     Route::resource('lokasi', App\Http\Controllers\AdminMasterLokasiController::class);
-    
-    
-    
+
+
+
     Route::get('/notifikasi', [App\Http\Controllers\HomeController::class, 'notifikasi'])->name('notif.index');
-    
+
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
     Route::get('/home/sparepart', [App\Http\Controllers\HomeController::class, 'getSparepart'])->name('home.sparepart');
     Route::get('/home/sparepart/qty', [App\Http\Controllers\HomeController::class, 'getQtySparepart'])->name('home.sparepart.qty');
     Route::get('/home/{id}', [App\Http\Controllers\HomeController::class, 'indexArea'])->name('area');
 
-    
+
     // Ticket
     Route::get('pengaduan/{id}', [App\Http\Controllers\ChatLiveWireController::class, 'show'])->name('pengaduan.show');
 
@@ -76,7 +83,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
     Route::get('req-ticket', [App\Http\Controllers\TiketController::class, 'reqTiket'])->name('req.ticket.operator');
     Route::get('all-ticket', [App\Http\Controllers\TiketController::class, 'allTiket'])->name('all.ticket.allTiket');
     Route::get('history-ticket', [App\Http\Controllers\TiketController::class, 'historyTiket'])->name('history.ticket.historyTiket');
-    
+
     Route::post('excel/ticket', [App\Http\Controllers\TiketController::class, 'excelReqTicket'])->name('req-ticket.excel');
     Route::post('excel/ticket2', [App\Http\Controllers\TiketController::class, 'excelTicket'])->name('ticket2.excel');
     Route::post('excel/allticker', [App\Http\Controllers\TiketController::class, 'excelAllTicket'])->name('ticketall.excel');
@@ -86,7 +93,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
     Route::post('pdf/ticket2', [App\Http\Controllers\TiketController::class, 'pdfTicket'])->name('ticket2.pdf');
     Route::post('pdf/allticker', [App\Http\Controllers\TiketController::class, 'pdfAllTicket'])->name('ticketall.pdf');
     Route::post('pdf/historyticker', [App\Http\Controllers\TiketController::class, 'pdfHistoryTicket'])->name('ticketHistory.pdf');
-    
+
     Route::post('ticket/filter', [App\Http\Controllers\TiketController::class, 'indexFilter'])->name('indexFilter');
     Route::post('req-ticket/filter', [App\Http\Controllers\TiketController::class, 'reqTiketFilter'])->name('reqTiketFilter');
     Route::post('all-ticket/filter', [App\Http\Controllers\TiketController::class, 'allTiketFilter'])->name('allTiketFilter');
@@ -143,7 +150,6 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
             Route::post('filter/brgkeluarprb', [App\Http\Controllers\AdminLgBrgKlrPribadiController::class, 'filter'])->name('brgkeluarprb.filter');
             Route::post('pdf/brgkeluarprb', [App\Http\Controllers\AdminLgBrgKlrPribadiController::class, 'pdf'])->name('brgkeluarprb.pdf');
             Route::post('excel/brgkeluarprb', [App\Http\Controllers\AdminLgBrgKlrPribadiController::class, 'excel'])->name('brgkeluarprb.excel');
-
         }
     );
 
@@ -213,7 +219,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
             Route::patch('jadwal/{id}/update', [App\Http\Controllers\JadwalController::class, 'update'])->name('update-jadwal');
             Route::delete('jadwal/{id}/hapus', [App\Http\Controllers\JadwalController::class, 'destroy'])->name('hapus-jadwal');
             Route::get('jadwal/{id}/show', [App\Http\Controllers\JadwalController::class, 'show'])->name('show-jadwal-operator');
-            
+
             Route::post('jadwal/replicate', [App\Http\Controllers\JadwalController::class, 'replicate'])->name('jadwal-replicate');
             Route::post('jadwal/lokasi', [App\Http\Controllers\JadwalController::class, 'perPit'])->name('jadwal-lokasi');
 

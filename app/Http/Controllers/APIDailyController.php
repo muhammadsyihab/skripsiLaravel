@@ -19,13 +19,14 @@ use App\Http\Resources\DailyOperatorResource;
 
 class APIDailyController extends Controller
 {
-    public function getDailyMekanikTasks() {
+    public function getDailyMekanikTasks()
+    {
         $tasks = DailyMekanik::with('unit', 'user')
-        ->where('users_id', auth()->user()->id)
-        ->orderBy('id', 'DESC')
-        ->get()
-        ->count();
-        
+            ->where('users_id', auth()->user()->id)
+            ->orderBy('id', 'DESC')
+            ->get()
+            ->count();
+
         return response()->json([
             'code' => 200,
             'message' => 'success',
@@ -33,29 +34,30 @@ class APIDailyController extends Controller
         ]);
     }
 
-    public function getStatus() {
+    public function getStatus()
+    {
         $jadwal = Jadwal::with('dailyOperator')->where('users_id', auth()->user()->id)
-        // ->where('jam_kerja_masuk', '<=', now()->format('Y-m-d h:i:s'))
-        // ->where('jam_kerja_keluar', '>=', now()->format('Y-m-d h:i:s'))
-        // ->latest('jam_kerja_masuk')
-        ->latest('created_at')
-        ->first();
-        
+            // ->where('jam_kerja_masuk', '<=', now()->format('Y-m-d h:i:s'))
+            // ->where('jam_kerja_keluar', '>=', now()->format('Y-m-d h:i:s'))
+            // ->latest('jam_kerja_masuk')
+            ->latest('created_at')
+            ->first();
+
         if (isset($jadwal)) {
-            if($jadwal->dailyOperator->count() == 1) {
+            if ($jadwal->dailyOperator->count() == 1) {
                 return response()->json([
                     'code' => 200,
                     'messages' => 'Sudah dimulai',
                     'datas' => 1
                 ]);
-            } elseif($jadwal->dailyOperator->count() == 2) {
+            } elseif ($jadwal->dailyOperator->count() == 2) {
                 return response()->json([
                     'code' => 200,
                     'messages' => 'Sudah diakhiri',
                     'datas' => 2
                 ]);
             }
-        } 
+        }
 
         return response()->json([
             'code' => 200,
@@ -72,9 +74,9 @@ class APIDailyController extends Controller
     public function getDailyOperator()
     {
         $dailys = DailyOperator::with('unit', 'user', 'jadwal')
-        ->where('users_id', auth()->user()->id)
-        // ->whereMonth('created_at', now()->format('m'))
-        ->get();
+            ->where('users_id', auth()->user()->id)
+            // ->whereMonth('created_at', now()->format('m'))
+            ->get();
 
         if (!empty($dailys)) {
 
@@ -89,10 +91,10 @@ class APIDailyController extends Controller
     public function getDailyMekanik()
     {
         $dailys = DailyMekanik::with('unit', 'user', 'jadwalMekanik')
-        ->where('users_id', auth()->user()->id)
-        ->orderBy('id', 'DESC')
-        ->take(20)
-        ->get();
+            ->where('users_id', auth()->user()->id)
+            ->orderBy('id', 'DESC')
+            ->take(20)
+            ->get();
 
         if (!empty($dailys)) {
             return response()->json([
@@ -142,41 +144,41 @@ class APIDailyController extends Controller
             // ->first();
 
             $jadwal = DB::table('tagline_operator')
-            ->select(
-                'tagline_operator.*',
-                'tb_jadwal.*',
-                'users.name',
-                'master_unit.no_lambung',
-                'master_unit.jenis',
-                'master_unit.id AS id_unit',
-            )
-            ->join('tb_jadwal', 'tagline_operator.jadwal_operator_id', '=','tb_jadwal.id')
-            ->join('users', 'tb_jadwal.users_id', 'users.id')
-            ->join('master_unit', 'tb_jadwal.master_unit_id', 'master_unit.id')
-            ->where('tb_jadwal.users_id', auth()->user()->id)
-            ->where('tagline_operator.jam_kerja_masuk', '<=', now()->format('Y-m-d H:i:s'))
-            ->where('tagline_operator.jam_kerja_keluar', '>=', now()->format('Y-m-d H:i:s'))
-            ->first();
-    
+                ->select(
+                    'tagline_operator.*',
+                    'tb_jadwal.*',
+                    'users.name',
+                    'master_unit.no_lambung',
+                    'master_unit.jenis',
+                    'master_unit.id AS id_unit',
+                )
+                ->join('tb_jadwal', 'tagline_operator.jadwal_operator_id', '=', 'tb_jadwal.id')
+                ->join('users', 'tb_jadwal.users_id', 'users.id')
+                ->join('master_unit', 'tb_jadwal.master_unit_id', 'master_unit.id')
+                ->where('tb_jadwal.users_id', auth()->user()->id)
+                ->where('tagline_operator.jam_kerja_masuk', '<=', now()->format('Y-m-d H:i:s'))
+                ->where('tagline_operator.jam_kerja_keluar', '>=', now()->format('Y-m-d H:i:s'))
+                ->first();
+
             if (!$jadwal) {
                 return response()->json([
                     'code' => 400,
                     'messages' => 'Operator belum terjadwal'
                 ])->setStatusCode(400);
             }
-    
+
             $countDailyUnit = DailyUnit::whereYear('tanggal', now()->format('Y'))->whereMonth('tanggal', now()->format('m'))->whereDay('tanggal', now()->format('d'))->where('users_id', auth()->user()->id)->where('master_unit_id', $jadwal->id_unit)->get()->count();
             $countDailyOperator = DailyOperator::where('tb_jadwal_id', $jadwal->id)
-            ->where('status', $request->status)
-            ->get()
-            ->count();
+                ->where('status', $request->status)
+                ->get()
+                ->count();
             $alreadyStart = DailyOperator::where('tb_jadwal_id', $jadwal->id)
-            ->where('status', 'Mulai')
-            ->get()
-            ->count();
-            
+                ->where('status', 'Mulai')
+                ->get()
+                ->count();
+
             $masterUnit = Unit::where('id', $jadwal->master_unit_id)->first();
-            
+
             if ($masterUnit->total_hm > $request->hm) {
                 return response()->json([
                     'code' => 400,
@@ -184,118 +186,117 @@ class APIDailyController extends Controller
                 ])->setStatusCode(400);
             }
 
-            
-    
+
+
             // if ($countDailyOperator < 1) {
-                if($request->status == "Mulai") {
-                    // jika daily unit sudah ada
-                    if ($countDailyUnit) {
-                        return response()->json([
-                            'code' => 400,
-                            'messages' => 'Daily Unit telah dibuat'
-                        ])->setStatusCode(400);
-                    }
+            if ($request->status == "Mulai") {
+                // jika daily unit sudah ada
+                // if ($countDailyUnit) {
+                //     return response()->json([
+                //         'code' => 400,
+                //         'messages' => 'Daily Unit telah dibuat'
+                //     ])->setStatusCode(400);
+                // }
 
-                    // status unit
-                    $masterUnit->update(['status_unit'=> 1]);
+                // status unit
+                $masterUnit->update(['status_unit' => 1]);
 
-                    // create daily unit
-                    DailyUnit::create([
-                        'users_id' => auth()->user()->id,
-                        'master_unit_id' => $jadwal->master_unit_id,
-                        'shift_id' => $jadwal->shift_id,
-                        'start_unit' => $request->hm,
-                        'tanggal' => now(),
-                    ]);
+                // create daily unit
+                DailyUnit::create([
+                    'users_id' => auth()->user()->id,
+                    'master_unit_id' => $jadwal->master_unit_id,
+                    'shift_id' => $jadwal->shift_id,
+                    'start_unit' => $request->hm,
+                    'tanggal' => now(),
+                ]);
 
-                    // save daily operator
-                    $photoSave = null;
-        
-                    if ($photo = $request->file('photo_hm')) {
-                        $destinationPath = 'storage/photoHm/';
-                        $profileImage = date('YmdHis') . "." . $photo->getClientOriginalExtension();
-                        $photo->move($destinationPath, $profileImage);
-                        $photoSave = "$profileImage";
-                    }
-        
-                    $daily = DailyOperator::create([
-                        'users_id' => auth()->user()->id,
-                        'master_unit_id' => $jadwal->master_unit_id,
-                        'tb_jadwal_id' => $jadwal->id,
-                        'hm' => $request->hm,
-                        'photo_hm' => $photoSave,
-                        'status' => $request->status,
-                    ]);
-        
-                    if (!$daily) {
-                        return response()->json([
-                            'code' => 400,
-                            'messages' => 'failed insert to table daily operator'
-                        ])->setStatusCode(400);
-                    }
-                    
-                } elseif ($request->status == "Berakhir") {                    
-                    // status unit
-                    $masterUnit->update(['status_unit'=> 0]);
+                // save daily operator
+                $photoSave = null;
 
-                    // update daily unit
-                    $dailyUnit = DailyUnit::where('users_id', auth()->user()->id)
+                if ($photo = $request->file('photo_hm')) {
+                    $destinationPath = 'storage/photoHm/';
+                    $profileImage = date('YmdHis') . "." . $photo->getClientOriginalExtension();
+                    $photo->move($destinationPath, $profileImage);
+                    $photoSave = "$profileImage";
+                }
+
+                $daily = DailyOperator::create([
+                    'users_id' => auth()->user()->id,
+                    'master_unit_id' => $jadwal->master_unit_id,
+                    'tb_jadwal_id' => $jadwal->id,
+                    'hm' => $request->hm,
+                    'photo_hm' => $photoSave,
+                    'status' => $request->status,
+                ]);
+
+                if (!$daily) {
+                    return response()->json([
+                        'code' => 400,
+                        'messages' => 'failed insert to table daily operator'
+                    ])->setStatusCode(400);
+                }
+            } elseif ($request->status == "Berakhir") {
+                // status unit
+                $masterUnit->update(['status_unit' => 0]);
+
+                // update daily unit
+                $dailyUnit = DailyUnit::where('users_id', auth()->user()->id)
                     ->where('master_unit_id', $jadwal->master_unit_id)
                     ->where('shift_id', $jadwal->shift_id)
                     ->latest('tanggal')
                     ->first();
-    
-                    // jika daily unit tidak ada
-                    if (!isset($dailyUnit) || $alreadyStart == 0) {
-                        return response()->json([
-                            'code' => 400,
-                            'messages' => 'Daily belum dimulai'
-                        ])->setStatusCode(400);
-                    }
-    
-                    // update master unit
-                    $masterUnit->update([
-                        'total_hm' => $request->hm,
-                    ]);
-                    
-                    // update daily unit
-                    $dailyUnit->update([
-                        'end_unit' => $request->hm,
-                    ]);
-                    
-                    // save daily operator
-                    $photoSave = null;
-                        
-                    if ($photo = $request->file('photo_hm')) {
-                        $destinationPath = 'storage/photoHm/';
-                        $profileImage = date('YmdHis') . "." . $photo->getClientOriginalExtension();
-                        $photo->move($destinationPath, $profileImage);
-                        $photoSave = "$profileImage";
-                    }
 
-                    $daily = DailyOperator::create([
-                        'users_id' => auth()->user()->id,
-                        'master_unit_id' => $jadwal->master_unit_id,
-                        'tb_jadwal_id' => $jadwal->id,
-                        'hm' => $request->hm,
-                        'photo_hm' => $photoSave,
-                        'status' => $request->status,
-                    ]);
-
-                    if (!$daily) {
-                        return response()->json([
-                            'code' => 400,
-                            'messages' => 'failed insert to table daily operator'
-                        ])->setStatusCode(400);
-                    }
+                // jika daily unit tidak ada
+                if (!isset($dailyUnit) || $alreadyStart == 0) {
+                    return response()->json([
+                        'code' => 400,
+                        'messages' => 'Daily belum dimulai'
+                    ])->setStatusCode(400);
                 }
+
+                // update master unit
+                $masterUnit->update([
+                    'total_hm' => $request->hm,
+                ]);
+
+                // update daily unit
+                $dailyUnit->update([
+                    'end_unit' => $request->hm,
+                ]);
+
+                // save daily operator
+                $photoSave = null;
+
+                if ($photo = $request->file('photo_hm')) {
+                    $destinationPath = 'storage/photoHm/';
+                    $profileImage = date('YmdHis') . "." . $photo->getClientOriginalExtension();
+                    $photo->move($destinationPath, $profileImage);
+                    $photoSave = "$profileImage";
+                }
+
+                $daily = DailyOperator::create([
+                    'users_id' => auth()->user()->id,
+                    'master_unit_id' => $jadwal->master_unit_id,
+                    'tb_jadwal_id' => $jadwal->id,
+                    'hm' => $request->hm,
+                    'photo_hm' => $photoSave,
+                    'status' => $request->status,
+                ]);
+
+                if (!$daily) {
+                    return response()->json([
+                        'code' => 400,
+                        'messages' => 'failed insert to table daily operator'
+                    ])->setStatusCode(400);
+                }
+            }
             // } else {
             //     return response()->json([
             //         'code' => 400,
             //         'messages' => 'Sudah Dimulai / Sudah Berakhir'
             //     ])->setStatusCode(400);
             // }
-    
+
             return response()->json([
                 'code' => 200,
                 'messages' => 'success',
@@ -307,13 +308,12 @@ class APIDailyController extends Controller
                 'messages' => 'Ada kesalahan ' . $th
             ])->setStatusCode(400);
         }
-        
     }
 
     public function postDailyMekanik(Request $request)
-    {   
+    {
         try {
-            if(!$request->tb_jadwal_id) {
+            if (!$request->tb_jadwal_id) {
                 return response()->json([
                     'code' => 200,
                     'messages' => 'Jadwal hari ini tidak ada.',
@@ -356,8 +356,6 @@ class APIDailyController extends Controller
                 'code' => 400,
                 'messages' => 'failed insert to table daily mekanik ' . $th
             ])->setStatusCode(400);
-        }        
+        }
     }
-
-    
 }
